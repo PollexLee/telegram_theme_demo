@@ -4,8 +4,8 @@
 
 ## Telegram Theme
 
-![示例图片](https://github.com/PollexLee/telegram_theme_demo/raw/master/image/tvt8c-0tgtj.gif")
+![示例图片](https://github.com/PollexLee/telegram_theme_demo/blob/master/image/tvt8c-0tgtj.gif?raw=true")
 
 ## demo效果
 
-![示例图片](https://github.com/PollexLee/telegram_theme_demo/raw/master/image/p34z0-9128g.gif")
+![示例图片](https://github.com/PollexLee/telegram_theme_demo/blob/master/image/p34z0-9128g.gif?raw=true")
