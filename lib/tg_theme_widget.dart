@@ -73,8 +73,8 @@ class TgThemeState extends State<TgThemeWidget> with TickerProviderStateMixin {
       }
     });
 
-    animationController = AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    childAnimController = AnimationController(value: 1, duration: Duration(milliseconds: 500), vsync: this);
+    animationController = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    childAnimController = AnimationController(value: 1, duration: Duration(milliseconds: 300), vsync: this);
 
     ///监听动画的改变
     animationController.addStatusListener((status) {
