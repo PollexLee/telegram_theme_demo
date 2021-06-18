@@ -9,8 +9,8 @@ import 'package:telegram_theme_demo/circle_clipper.dart';
 
 class TgThemeWidget extends StatefulWidget {
   TgThemeWidget({this.child, this.controller});
-  Widget child;
-  TgThemeController controller;
+  final Widget child;
+  final TgThemeController controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -24,6 +24,8 @@ class TgThemeState extends State<TgThemeWidget> with TickerProviderStateMixin {
   ui.Image backImage;
   ui.Image frontImage;
   bool isNormal = true;
+  // bool isAnim = false;
+  ThemeChangeType _captureType = ThemeChangeType.IDLE;
 
   // Uint8List bytes;
   AnimationController animationController;
@@ -35,6 +37,10 @@ class TgThemeState extends State<TgThemeWidget> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     widget.controller.registerCapture(({Offset offset}) async {
+      if (_captureType != ThemeChangeType.IDLE) {
+        return;
+      }
+      _captureType = ThemeChangeType.CAPTURING;
       debugPrint('开始截屏');
       circleOffset = offset;
       RenderRepaintBoundary boundary = repaintWidgetKey.currentContext.findRenderObject();
@@ -48,30 +54,47 @@ class TgThemeState extends State<TgThemeWidget> with TickerProviderStateMixin {
       } else {
         frontImage = image;
       }
+      _captureType = ThemeChangeType.CAPTURE_FINISH;
       setState(() {});
     });
+
     widget.controller.registerStartAnim(() {
+      if (_captureType != ThemeChangeType.CAPTURE_FINISH) {
+        return;
+      }
+      _captureType = ThemeChangeType.ANIMATING;
       debugPrint('开始执行动画');
       if (isNormal) {
         setState(() {});
         childAnimController.forward(from: 0.0);
+      } else {
+        setState(() {});
+        animationController.reverse(from: 1.0);
       }
     });
 
-    animationController = AnimationController(duration: Duration(seconds: 3), vsync: this);
+    animationController = AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     childAnimController = AnimationController(value: 1, duration: Duration(milliseconds: 500), vsync: this);
 
     ///监听动画的改变
     animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
+      if (status == AnimationStatus.dismissed) {
         // animationController.reverse();
+        _captureType = ThemeChangeType.IDLE;
+        animationController.reset();
         setState(() {
+          isNormal = true;
           frontImage = null;
           backImage = null;
         });
-      } else if (status == AnimationStatus.dismissed) {
-        // animationController.forward();
+      }
+    });
+
+    childAnimController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _captureType = ThemeChangeType.IDLE;
         setState(() {
+          isNormal = false;
           frontImage = null;
           backImage = null;
         });
@@ -107,7 +130,7 @@ class TgThemeState extends State<TgThemeWidget> with TickerProviderStateMixin {
             animation: animationController,
             builder: (ctx, child) {
               return ClipOval(
-                clipper: CircularClipper(percentage: animationController?.value, offset: const Offset(0, 0)),
+                clipper: CircularClipper(percentage: animationController?.value, offset: circleOffset),
                 child: child,
               );
             },
@@ -230,3 +253,5 @@ class ImagePainter extends CustomPainter {
     return true;
   }
 }
+
+enum ThemeChangeType { IDLE, CAPTURING, CAPTURE_FINISH, ANIMATING }

@@ -31,6 +31,8 @@ dependencies:
 
   provider: 5.0.0
 
+  process_run: ^0.12.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

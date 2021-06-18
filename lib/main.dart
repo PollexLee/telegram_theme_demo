@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:telegram_theme_demo/home_page.dart';
 import 'package:telegram_theme_demo/my_theme.dart';
+import 'package:telegram_theme_demo/test_shell_page.dart';
 import 'package:telegram_theme_demo/tg_theme_widget.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
             theme: getLightTheme(),
             darkTheme: getDarkTheme(),
             home: HomePage(),
+            // home: TextShellPage(),
           );
         },
       ),
